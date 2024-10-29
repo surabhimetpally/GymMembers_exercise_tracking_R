@@ -1,0 +1,92 @@
+---
+title: "Gym Members Exercise"
+output: pdf_document
+date: "2024-10-29"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Analysis of Gym Members' Exercise Dataset
+
+### a. Dataset URL
+The dataset used for this analysis can be found at the following URL:
+Gym Members' Exercise Dataset on Kaggle: https://www.kaggle.com/datasets/valakhorasani/gym-members-exercise-dataset
+
+### b. Why This Dataset is of Interest
+This dataset is fascinating because it provides detailed fitness metrics of gym members, allowing for the analysis of exercise patterns, demographic influences on performance, and overall fitness progression. The combination of physical attributes and workout data makes it ideal for exploring how different factors, like age, gender, and fitness experience, impact workout efficiency and health trends.
+
+```{r, message=FALSE}
+# Load necessary libraries
+library(tidyverse)
+
+# Define the path to your CSV file
+file_path <- "/Users/surabhimetpally/Downloads/gym_members_exercise_tracking.csv"
+
+# Read the CSV file into a data frame
+gym_data <- read_csv(file_path)
+```
+
+```{r, message=FALSE}
+# Calculate the mean and median calories burned by workout type
+calories_summary <- gym_data %>%
+  group_by(Workout_Type) %>%
+  summarise(
+    Avg_Calories = mean(Calories_Burned, na.rm = TRUE),
+    Median_Calories = median(Calories_Burned, na.rm = TRUE)
+  )
+
+calories_summary
+```
+
+```{r, message=FALSE}
+# Create a box plot to compare calories burned by workout type
+ggplot(gym_data, aes(x = Workout_Type, y = Calories_Burned, fill = Workout_Type)) +
+  geom_boxplot() +
+  labs(title = "Calories Burned by Workout Type", x = "Workout Type", y = "Calories Burned") +
+  theme_minimal()
+```
+
+```{r, message=FALSE}
+# Correlation matrix between Weight, Session Duration, and Max BPM
+correlation_matrix <- gym_data %>%
+  select(`Weight (kg)`, `Session_Duration (hours)`, Max_BPM) %>%
+  cor(use = "complete.obs")
+
+# Display the correlation matrix
+correlation_matrix
+
+```
+
+```{r, message=FALSE}
+# Summary statistics for Weight, Max BPM, and Session Duration
+summary_stats <- gym_data %>%
+  summarise(
+    Mean_Weight = mean(`Weight (kg)`, na.rm = TRUE),
+    Median_Weight = median(`Weight (kg)`, na.rm = TRUE),
+    Mean_Max_BPM = mean(`Max_BPM`, na.rm = TRUE),
+    Median_Max_BPM = median(`Max_BPM`, na.rm = TRUE),
+    Mean_Session_Duration = mean(`Session_Duration (hours)`, na.rm = TRUE),
+    Median_Session_Duration = median(`Session_Duration (hours)`, na.rm = TRUE)
+  )
+
+# Display summary statistics
+summary_stats
+
+# Create a contingency table for Gender and Workout Type
+contingency_table <- table(gym_data$Gender, gym_data$Workout_Type)
+
+# Display the contingency table
+contingency_table
+```
+
+### Summary Statistics and Contingency Table Analysis
+
+The summary statistics for key variables in the dataset provide the following insights:
+
+- **Weight (kg)**: The average weight of gym members is approximately `r summary_stats$Mean_Weight`, with a median of `r summary_stats$Median_Weight`. This indicates that there may be outliers affecting the average, as the mean and median differ.
+- **Max BPM**: The average maximum heart rate during workouts is around `r summary_stats$Mean_Max_BPM`, while the median is `r summary_stats$Median_Max_BPM`. This suggests that most members achieve a maximum heart rate close to the median value, indicating a relatively consistent workout intensity among members.
+- **Session Duration**: On average, gym members spend `r summary_stats$Mean_Session_Duration` hours per session, with a median duration of `r summary_stats$Median_Session_Duration`. This information is crucial for understanding workout habits and consistency.
+
+The contingency table shows the distribution of workout types across different genders. By analyzing the table, we can determine whether certain types of workouts are more popular among male or female gym members. For example, if we see a higher count of strength workouts among males compared to females, this might indicate gender-based preferences in workout types.
