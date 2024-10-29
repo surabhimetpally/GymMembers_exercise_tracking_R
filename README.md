@@ -30,5 +30,4 @@ We analyze the correlation between key variables such as weight, session duratio
 ## Insights and Conclusions
 The analysis reveals patterns in workout behaviors, highlighting potential gender-based preferences and variations in workout effectiveness based on demographic factors. This information can be valuable for gym management and fitness professionals in tailoring programs and resources to better meet the needs of their members.
 
-## License
-This project is licensed under the MIT License. See the LICENSE file for details.
+
